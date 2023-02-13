@@ -7,7 +7,7 @@ import { Filter } from './Filter/Filter';
 
 export class App extends Component {
   state = {
-    contacts: [
+    contacts: JSON.parse(localStorage.getItem('contucts')) ?? [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
       { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
@@ -15,6 +15,14 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      const stringifiedContacts = JSON.stringify(this.state.contacts);
+
+      localStorage.setItem('contucts', stringifiedContacts);
+    }
+  }
 
   addContact = contact => {
     if (
@@ -44,9 +52,7 @@ export class App extends Component {
 
   handleDelete = event => {
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(
-        el => el.id !== event.target.id
-      ),
+      contacts: prevState.contacts.filter(el => el.id !== event.target.id),
     }));
   };
 
